@@ -20,7 +20,7 @@ class InvoiceFactory extends Factory
         $paid = $this->faker->boolean();
         return [
             "user_id" => User::all()->random()->id,
-            "type" => $this->faker->randomElement(["invoice", "receipt"]),
+            "type" => $this->faker->randomElement(["C", "P", "B"]),
             "paid" => $paid,
             "value" => $this->faker->numberBetween(1000, 2000),
             "payment_date" => $paid ? $this->faker->randomElement([$this->faker->dateTimeThisMonth(), null]) : null,
