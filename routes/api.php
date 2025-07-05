@@ -16,11 +16,6 @@ Route::prefix("v1")->group(function () {
         Route::get("/{id}", [UserController::class, "show"]);
     });
 
-    Route::prefix("invoices")->group(function () {
-        Route::get("/",     [InvoiceController::class, "index"]);
-        Route::get("/{id}", [InvoiceController::class, "show"]);
-        Route::post("/",    [InvoiceController::class, "store"]);
-        Route::put("/{invoice}", [InvoiceController::class, "update"]);
-        Route::delete("/{invoice}", [InvoiceController::class, "destroy"]);
-    });
+    Route::apiResource("invoices", InvoiceController::class);
+
 });
