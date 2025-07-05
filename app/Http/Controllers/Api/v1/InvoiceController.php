@@ -34,10 +34,16 @@ class InvoiceController extends Controller
         ]);
 
         if($validator->fails()){
-            return $this->error("Erro ao criar fatura", 422, $validator->errors()->toArray());
+            return $this->error("Invalid data in request", 422, $validator->errors()->toArray());
         }
 
-        
+        $created = Invoice::create($validator->validated());
+
+        if(!$created){
+            return $this->error("Error creating invoice", 400);
+        }
+
+        return $this->response("Invoice created successfully", 200, new InvoiceResource($created->load("user")));
     }
 
     /**

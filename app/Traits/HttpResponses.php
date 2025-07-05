@@ -1,8 +1,11 @@
 <?php
  namespace App\Traits;
 
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Resources\Json\JsonResource;
+
  trait HttpResponses{
-    public function response(string $message, string|int $status, array $data = []){
+    public function response(string $message, string|int $status, array|Model|JsonResource $data = []){
         return response()->json([
             "message" => $message,
             "status" => $status,
@@ -10,7 +13,7 @@
         ], $status);
     }
 
-    public function error(string $message, string|int $status, array $errors,array $data = []){
+    public function error(string $message, string|int $status, array $errors = [],array $data = []){
         return response()->json([
             "message" => $message,
             "status" => $status,
