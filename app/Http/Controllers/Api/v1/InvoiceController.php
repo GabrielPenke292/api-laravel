@@ -57,9 +57,36 @@ class InvoiceController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Invoice $invoice)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            "user_id" => "required",
+            "type" => "required|max:1|in:C,P,B",
+            "paid" => "required|numeric|between:0,1",
+            "value" => "required|numeric|between:1,9999.99",
+            "payment_date" => "nullable|date_format:Y-m-d H:i:s"
+        ]);
+
+        if($validator->fails()){
+            return $this->error("Invalid data in request", 422, $validator->errors()->toArray());
+        }
+
+        $validated = $validator->validated();
+
+        $updated = Invoice::find($invoice->id)->update([
+            "user_id" => $validated["user_id"],
+            "type" => $validated["type"],
+            "paid" => $validated["paid"],
+            "value" => $validated["value"],
+            "payment_date" => $validated["paid"] ? $validated["payment_date"] : null
+        ]);
+
+        if(!$updated){
+            return $this->error("Error updating invoice", 400);
+        }
+
+        return $this->response("Invoice updated successfully", 200, new InvoiceResource($invoice->load("user")));
+
     }
 
     /**
